@@ -17,8 +17,13 @@
         </layout>
     </appender>
 
-    <logger name="org.hibernate" additivity="false">
+	<logger name="org.hibernate" additivity="false">
         <level value="INFO" />
+        <appender-ref ref="FILE" />
+    </logger>
+    <logger name="pl.edu.agh.notes" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </logger>
     <root>

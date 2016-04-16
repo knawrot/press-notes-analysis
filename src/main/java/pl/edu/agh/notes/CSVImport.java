@@ -21,14 +21,12 @@ public class CSVImport {
     private static final String TAG_COUNTRY = "TAG_country";
 
     public static void main(String[] args){
-
         HibernateUtil hibernateUtil = new HibernateUtil();
         int i = 1;
 
         List<RssNote> rssNotes = new LinkedList<RssNote>();
         List<HashMap<String, String>> x = new ArrayList<HashMap<String, String>>();
-//        File file = new File("rss_unique_TAG_country_Ebola.csv");
-        File dir = new File("Geomedia_extract_AGENDA");
+        File dir = new File("C:/Users/Krecik/Downloads/geomedia/geomedia/Geomedia_extract_AGENDA/Geomedia_extract_AGENDA");
         File csvFile[];
         List<File> fileList = new LinkedList<File>();
         for(File csvDir : dir.listFiles()){
@@ -76,6 +74,8 @@ public class CSVImport {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (RuntimeException e) {
+            	System.out.println("Exception in file: " + file.getAbsolutePath());
             }
             System.out.println("Przetworzono: " + i);
             hibernateUtil.closeCurrentSession();
