@@ -1,6 +1,8 @@
 package pl.edu.agh.notes;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,14 +43,12 @@ public class StatisticsGenerator {
 	
 	public static void main(String[] args) throws IOException {
 		logger.info("Splitting file " + INPUT_FILE + " into smaller files...");
-		FileSplitter.splitFile(WORKING_DIRECTORY + INPUT_FILE);
+		//FileSplitter.splitFile(WORKING_DIRECTORY + INPUT_FILE);
 		logger.info("Done");
 		
 		final WebCrawler webCrawler = WebCrawlerFactory
 										.getWebCrawler(WebCrawlers.WORD_FREQUENCY);
-		final Map<String, Integer> entityFrequency = 
-												new HashMap<String, Integer>();
-		
+				
 		logger.info("Running webcrawlers on splits...");
 		Files.list(Paths.get(WORKING_DIRECTORY))
 				.filter(new Predicate<Path>() {
@@ -65,21 +65,55 @@ public class StatisticsGenerator {
 							logger.info("Running webcrawler on file " + path.getFileName());
 							Map<String, Integer> map = webCrawler.runWithText(
 													Files.lines(path)
-														.collect(Collectors.joining()));
-							for (Entry<String, Integer> entry : map.entrySet()) {
-								Integer wordCount = entityFrequency.get(entry.getKey());
-								if (wordCount != null) {
-									entityFrequency.put(entry.getKey(),
-											wordCount + entry.getValue());
-								} else {
-									entityFrequency.put(entry.getKey(), 
-											entry.getValue());
-								}
-							}
+														.collect(Collectors.joining()));					
+							String fileName = RESULTS_FILE_PREFIX + "." + path.getFileName();
+							logger.info("Saving temporary results to file " + fileName);
+							ObjectOutputStream outputStream = new ObjectOutputStream(
+													Files.newOutputStream(
+															Paths.get(RESULTS_DIRECTORY + fileName),
+															StandardOpenOption.CREATE_NEW));
+							outputStream.writeObject(map);
 							logger.info("Done webcrawling with file " + path.getFileName());
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
+					}
+				});
+		logger.info("Done");
+		
+		final Map<String, Integer> entityFrequency = new HashMap<String, Integer>();
+		logger.info("Merging local results...");
+		Files.list(Paths.get(RESULTS_DIRECTORY))
+				.filter(new Predicate<Path>() {
+
+					public boolean test(Path path) {
+						return path.getFileName().toString()
+									.startsWith(RESULTS_FILE_PREFIX + "." 
+												+ FileSplitter.SPLIT_FILE_PREFIX);
+					}		
+				})
+				.forEach(new Consumer<Path>() {
+
+					@SuppressWarnings("unchecked")
+					public void accept(Path t) {
+						try {
+							ObjectInputStream inputStream = new ObjectInputStream(Files
+																					.newInputStream(t));
+							Map<String, Integer> map = (Map<String, Integer>) inputStream.readObject();
+							for (Entry<String, Integer> entry : map.entrySet()) {
+								Integer wordCount = entityFrequency.get(entry.getKey());
+								if (wordCount != null) {
+									entityFrequency.put(entry.getKey(), wordCount + entry.getValue());
+								} else {
+									entityFrequency.put(entry.getKey(), entry.getValue());
+								}
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+						
 					}
 				});
 		logger.info("Done");
