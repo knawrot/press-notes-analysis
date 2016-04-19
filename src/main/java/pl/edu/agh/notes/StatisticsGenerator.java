@@ -43,7 +43,7 @@ public class StatisticsGenerator {
 	
 	public static void main(String[] args) throws IOException {
 		logger.info("Splitting file " + INPUT_FILE + " into smaller files...");
-		//FileSplitter.splitFile(WORKING_DIRECTORY + INPUT_FILE);
+		FileSplitter.splitFile(WORKING_DIRECTORY + INPUT_FILE);
 		logger.info("Done");
 		
 		final WebCrawler webCrawler = WebCrawlerFactory
