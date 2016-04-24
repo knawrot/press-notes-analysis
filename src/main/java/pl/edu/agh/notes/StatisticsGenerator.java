@@ -30,9 +30,9 @@ import pl.edu.agh.notes.utility.webcrawlers.WebCrawler;
 public class StatisticsGenerator {
 	private static final Logger logger = Logger.getLogger(StatisticsGenerator.class);
 	private static final String RESULTS_FILE_PREFIX = "results";
-	private static final String INPUT_FILE = "UKR.txt";
+	private static final String INPUT_FILE = "litwa.txt";
 	private static final String WORKING_DIRECTORY = 
-									"C:/Users/Krecik/Desktop/Agenty 3/Ukraina/";
+									"notes/";
 	private static final String RESULTS_DIRECTORY = 
 									"statistics/";
 	
@@ -45,7 +45,7 @@ public class StatisticsGenerator {
 		logger.info("Splitting file " + INPUT_FILE + " into smaller files...");
 		FileSplitter.splitFile(WORKING_DIRECTORY + INPUT_FILE);
 		logger.info("Done");
-		
+
 		final WebCrawler webCrawler = WebCrawlerFactory
 										.getWebCrawler(WebCrawlers.WORD_FREQUENCY);
 				
@@ -135,7 +135,7 @@ public class StatisticsGenerator {
 																		: INPUT_FILE.length()-1));
 		logger.info("Saving results to file " + fileName);
 		Files.write(Paths.get(RESULTS_DIRECTORY + fileName),
-					sb.toString().getBytes(),
+					sb.toString().getBytes(), StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
 		logger.info("Done");
 	}

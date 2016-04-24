@@ -1,5 +1,6 @@
 package pl.edu.agh.notes.utility.webcrawlers;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,9 @@ import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
 
 
@@ -17,9 +20,16 @@ public class WordFrequencyWebCrawler implements WebCrawler {
 	private static final String WORD_FREQ_AT_ONLINE_UTILITY_COM = 
 										"http://www.online-utility.org/"
 										+ "english/filtered_word_frequency.jsp";
-		
+
+
 	public Map<String, Integer> runWithText(String text) {
-		WebDriver driver = new FirefoxDriver();
+		if(text.isEmpty()){
+			return Collections.emptyMap();
+		}
+
+		System.setProperty("webdriver.chrome.driver", "drive/chromedriver");
+
+		WebDriver driver = new ChromeDriver();//FirefoxDriver();
 		driver.get(WORD_FREQ_AT_ONLINE_UTILITY_COM);
 		
 		WebElement form = driver.findElement(By.tagName("form"));
