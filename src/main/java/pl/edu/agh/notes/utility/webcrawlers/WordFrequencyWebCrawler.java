@@ -9,8 +9,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
 
 
@@ -26,10 +24,9 @@ public class WordFrequencyWebCrawler implements WebCrawler {
 		if(text.isEmpty()){
 			return Collections.emptyMap();
 		}
-
 		System.setProperty("webdriver.chrome.driver", "drive/chromedriver");
-
-		WebDriver driver = new ChromeDriver();//FirefoxDriver();
+		WebDriver driver = new ChromeDriver(); //FirefoxDriver() or SafariDriver();
+		
 		driver.get(WORD_FREQ_AT_ONLINE_UTILITY_COM);
 		
 		WebElement form = driver.findElement(By.tagName("form"));
