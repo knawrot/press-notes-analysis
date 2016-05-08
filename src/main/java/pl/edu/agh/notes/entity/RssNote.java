@@ -1,7 +1,10 @@
 package pl.edu.agh.notes.entity;
 
 import javax.persistence.*;
-import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Michał Adamczyk.
@@ -20,7 +23,31 @@ public class RssNote {
     private String tag_country;
     private String newspaper;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "tag_to_nodes", joinColumns = {
+            @JoinColumn(name = "nodes_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id",nullable = false, updatable = false)})
+    private List<Tag> tags = new LinkedList<Tag>();
+
     public RssNote() {
+    }
+
+    public RssNote(String feed, String time, String text1, String text2, String tag_country, String newspaper, List<Tag> tags) {
+        this.feed = feed;
+        this.time = time;
+        this.text1 = text1;
+        this.text2 = text2;
+        this.tag_country = tag_country;
+        this.newspaper = newspaper;
+        this.tags = tags;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public int getId() {

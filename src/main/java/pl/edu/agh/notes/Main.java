@@ -10,13 +10,8 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -24,6 +19,9 @@ import java.util.stream.Stream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.hibernate.Session;
+import pl.edu.agh.notes.entity.RssNote;
+import pl.edu.agh.notes.entity.Tag;
 
 /**
  * Created by Michał Adamczyk.
@@ -36,7 +34,22 @@ public class Main {
     
     
     public static void main(String[] args) throws IOException {
-    	
+        System.out.println("Hibernate many to many (Annotation)");
+        HibernateUtil hibernateUtil = new HibernateUtil();
+        Session session = hibernateUtil.openSession();
+        session.beginTransaction();
+
+        RssNote rssNote = (RssNote) session.get(RssNote.class, 1);
+        Tag tag = (Tag) session.get(Tag.class, 1);
+        List<Tag> list = new LinkedList<>();
+        list.add(tag);
+        rssNote.setTags(list);
+
+        session.save(rssNote);
+        session.getTransaction().commit();
+        System.out.println("Done");
+        System.exit(0);
+
     }
     
 }
