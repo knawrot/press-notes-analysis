@@ -1,8 +1,8 @@
 package pl.edu.agh.notes.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Michał Adamczyk.
@@ -18,14 +18,14 @@ public class Tag {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
-    private Set<RssNote> nodes = new HashSet<RssNote>(0);
+    private List<RssNote> nodes = new LinkedList<>();
 
     public Tag(String name, Integer frequency) {
         this.frequency = frequency;
         this.name = name;
     }
 
-    public Tag(int frequency, String name, Set<RssNote> nodes) {
+    public Tag(int frequency, String name, List<RssNote> nodes) {
         this.frequency = frequency;
         this.name = name;
         this.nodes = nodes;
@@ -34,11 +34,11 @@ public class Tag {
     public Tag() {
     }
 
-    public Set<RssNote> getNodes() {
+    public List<RssNote> getNodes() {
         return nodes;
     }
 
-    public void setNodes(Set<RssNote> nodes) {
+    public void setNodes(List<RssNote> nodes) {
         this.nodes = nodes;
     }
 

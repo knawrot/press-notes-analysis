@@ -1,24 +1,11 @@
 package pl.edu.agh.notes;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
+import java.util.*;
+
 import org.apache.log4j.xml.DOMConfigurator;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import pl.edu.agh.notes.entity.RssNote;
 import pl.edu.agh.notes.entity.Tag;
@@ -34,19 +21,25 @@ public class Main {
     
     
     public static void main(String[] args) throws IOException {
-        System.out.println("Hibernate many to many (Annotation)");
         HibernateUtil hibernateUtil = new HibernateUtil();
         Session session = hibernateUtil.openSession();
-        session.beginTransaction();
 
-        RssNote rssNote = (RssNote) session.get(RssNote.class, 1);
-        Tag tag = (Tag) session.get(Tag.class, 1);
-        List<Tag> list = new LinkedList<>();
-        list.add(tag);
-        rssNote.setTags(list);
+        Query query = session.createQuery("from Tag");
+        List<Tag> tagList = query.list();
+        for(Tag tag1 : tagList){
+            session.beginTransaction();
+            String tagName = tag1.getName();
+            if(tagName.contains("\'")){
+                tagName = tagName.split("\'")[0];
+            }
+            Query tagQuery = session.createQuery("from RssNote where text2 like \'%" + tagName + "%\'");
+            List<RssNote> notesTaged = tagQuery.list();
+            tag1.setNodes(notesTaged);
+            session.save(tag1);
+            session.getTransaction().commit();
 
-        session.save(rssNote);
-        session.getTransaction().commit();
+        }
+
         System.out.println("Done");
         System.exit(0);
 
