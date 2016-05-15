@@ -26,7 +26,10 @@ public class Main {
 
         Query query = session.createQuery("from Tag");
         List<Tag> tagList = query.list();
+        int i = 1;
         for(Tag tag1 : tagList){
+            i++;
+            System.out.println(i + "/" + tagList.size() + " : " + tag1.getName());
             session.beginTransaction();
             String tagName = tag1.getName();
             if(tagName.contains("\'")){
@@ -36,6 +39,7 @@ public class Main {
             List<RssNote> notesTaged = tagQuery.list();
             tag1.setNodes(notesTaged);
             session.save(tag1);
+            session.flush();
             session.getTransaction().commit();
 
         }
