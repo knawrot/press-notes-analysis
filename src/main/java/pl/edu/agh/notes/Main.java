@@ -26,7 +26,7 @@ public class Main {
 
         Query query = session.createQuery("from Tag");
         List<Tag> tagList = query.list();
-        int i = 1;
+        int i = 0;
         for(Tag tag1 : tagList){
             i++;
             System.out.println(i + "/" + tagList.size() + " : " + tag1.getName());
@@ -37,8 +37,10 @@ public class Main {
             }
             Query tagQuery = session.createQuery("from RssNote where text2 like \'%" + tagName + "%\'");
             List<RssNote> notesTaged = tagQuery.list();
-            tag1.setNodes(notesTaged);
-            session.save(tag1);
+            for(RssNote rssNote : notesTaged){
+                rssNote.getTags().add(tag1);
+                session.save(rssNote);
+            }
             session.flush();
             session.getTransaction().commit();
 
