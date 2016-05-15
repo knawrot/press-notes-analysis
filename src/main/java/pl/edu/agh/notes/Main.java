@@ -38,7 +38,7 @@ public class Main {
             Query tagQuery = session.createQuery("from RssNote where text2 like \'%" + tagName + "%\'");
             List<RssNote> notesTaged = tagQuery.list();
             for(RssNote rssNote : notesTaged){
-                rssNote.getTags().add(tag1);
+                rssNote.addTag(tag1);
                 session.save(rssNote);
             }
             session.flush();
