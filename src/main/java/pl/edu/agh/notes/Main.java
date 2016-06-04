@@ -35,10 +35,10 @@ public class Main {
             if(tagName.contains("\'")){
                 tagName = tagName.split("\'")[0];
             }
-            Query tagQuery = session.createQuery("from RssNote where text2 like \'%" + tagName + "%\'");
+            Query tagQuery = session.createQuery("from RssNote where text2 like \'% " + tagName + " %\'");
             List<RssNote> notesTaged = tagQuery.list();
             for(RssNote rssNote : notesTaged){
-                rssNote.addTag(tag1);
+                rssNote.getTags().add(tag1);
                 session.save(rssNote);
             }
             session.flush();

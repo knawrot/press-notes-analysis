@@ -17,7 +17,7 @@ public class Tag {
     private int frequency;
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
     private List<RssNote> nodes = new LinkedList<>();
 
     public Tag(String name, Integer frequency) {

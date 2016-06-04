@@ -3,6 +3,7 @@ package pl.edu.agh.notes;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,9 +31,9 @@ import pl.edu.agh.notes.utility.webcrawlers.WebCrawler;
 public class StatisticsGenerator {
 	private static final Logger logger = Logger.getLogger(StatisticsGenerator.class);
 	private static final String RESULTS_FILE_PREFIX = "results";
-	private static final String INPUT_FILE = "litwa.txt";
+	private static final String INPUT_FILE = "POL.txt";
 	private static final String WORKING_DIRECTORY = 
-									"notes/";
+									"C:/Users/Krecik/Desktop/Agenty 3/Ukraina/";
 	private static final String RESULTS_DIRECTORY = 
 									"statistics/";
 	
@@ -64,7 +65,7 @@ public class StatisticsGenerator {
 						try {
 							logger.info("Running webcrawler on file " + path.getFileName());
 							Map<String, Integer> map = webCrawler.runWithText(
-													Files.lines(path)
+													Files.lines(path, Charset.forName("ISO-8859-1"))
 														.collect(Collectors.joining()));					
 							String fileName = RESULTS_FILE_PREFIX + "." + path.getFileName();
 							logger.info("Saving temporary results to file " + fileName);
