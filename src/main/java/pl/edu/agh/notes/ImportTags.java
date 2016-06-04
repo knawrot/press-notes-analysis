@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 public class ImportTags {
 
-    private static final String TAGS_DIRECTORY = "statistics/";
+    private static final String TAGS_DIRECTORY = "statistics/tags/";
     public static final String SPLIT_FILE_PREFIX = "results";
 
     public static void main(String[] args) throws IOException {
